@@ -1,55 +1,85 @@
 <template>
 <div>
-    <el-drawer
-      title="添加子项"
-      :visible.sync="addItemDrawer"
-      :direction="direction"
-      ref='addItemDrawer'
-      :before-close="handleClose">
-      <div class="drawer-content">
-        <el-form
-          :model="createListForm"
-          ref='createListForm'
-          :rules='createListRules'>
-          <el-form-item
-            label="子项名称"
-            prop='title'
-            :label-width="formLabelWidth">
-            <el-input
-              type='text'
-              v-model="createListForm.title"
-              maxlength='30'
-              show-word-limit
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="子项描述"
-            prop='description'
-            :label-width="formLabelWidth">
-            <el-input
-              type='textarea'
-              v-model="createListForm.description"
-              maxlength='300'
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="drawer-footer" style="padding-left:30px">
-        <el-button
-          type="primary"
-          @click="submitCreateListForm('createListForm')"
-        >提交</el-button>
-        <el-button @click="createListDrawer=false">取消</el-button>
-      </div>
-    </el-drawer>
+  <el-drawer
+    title="添加列表"
+    :visible.sync="isShowDrawer"
+    direction="rtl"
+    ref='addListDrawer'>
+    <div class="drawer-content">
+      <el-form
+        :model="addListForm"
+        ref='addListForm'
+        :rules='addListRules'>
+        <el-form-item
+          label="列表名称"
+          prop='title'
+          label-width="80px">
+          <el-input
+            type='text'
+            v-model="addListForm.title"
+            maxlength='30'
+            show-word-limit
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="列表描述"
+          prop='description'
+          label-width="80px">
+          <el-input
+            type='textarea'
+            v-model="addListForm.description"
+            maxlength='300'
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="drawer-footer" style="padding-left:30px">
+      <el-button
+        type="primary"
+        @click="submitAddListForm('addListForm')"
+      >提交</el-button>
+      <el-button @click="isShowDrawer=false">取消</el-button>
+    </div>
+  </el-drawer>
 </div>
 </template>
 
 <script>
 export default {
-  name: 'AddItem',
+  name: 'AddList',
+  data() {
+    return {
+      isShowDrawer: false,
+      addListForm: {
+        title: '',
+        description: '',
+      },
+    }
+  },
+  methods: {
+    submitAddListForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (!valid) {
+          return false
+        }
+        this.isShowDrawer = false
+        this.$message({
+          message: '添加列表成功！',
+          type: 'success',
+        })
+        this.addListForm.title = ''
+        this.addListForm.description = ''
+        return true
+      })
+    },
+  },
+  mounted() {
+    this.$EventBus.$on('showAddListDrawer', () => {
+      this.isShowDrawer = true
+    })
+  },
 }
 </script>
 

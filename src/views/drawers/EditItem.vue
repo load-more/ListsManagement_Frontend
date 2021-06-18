@@ -3,7 +3,7 @@
   <el-drawer
     title="编辑子项信息"
     :visible.sync="isShowDrawer"
-    :direction="rtf">
+    direction="rtl">
     <div class="drawer-content">
       <el-form
         ref='editItemForm'

@@ -97,6 +97,7 @@
     <add-item></add-item>
     <edit-list></edit-list>
     <edit-item></edit-item>
+    <add-list></add-list>
   </div>
 </template>
 
@@ -105,6 +106,7 @@ import { getListRequest } from 'api/request'
 import AddItem from './drawers/AddItem.vue'
 import EditList from './drawers/EditList.vue'
 import EditItem from './drawers/EditItem.vue'
+import AddList from './drawers/AddList.vue'
 
 export default {
   name: 'Home',
@@ -187,6 +189,7 @@ export default {
     AddItem,
     EditList,
     EditItem,
+    AddList,
   },
 };
 </script>
