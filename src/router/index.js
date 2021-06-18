@@ -31,18 +31,18 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const needLogin = ['/home']
-  const userid = sessionStorage.getItem('userid')
-  if (needLogin.indexOf(to.path) === -1) {
-    next()
-  } else if (userid) {
-    next()
-  } else if (to.path === '/login') {
-    next()
-  } else {
-    next('/login')
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   const needLogin = ['/home']
+//   const userid = sessionStorage.getItem('userid')
+//   if (needLogin.indexOf(to.path) === -1) {
+//     next()
+//   } else if (userid) {
+//     next()
+//   } else if (to.path === '/login') {
+//     next()
+//   } else {
+//     next('/login')
+//   }
+// })
 
 export default router;

@@ -47,6 +47,9 @@
 </template>
 
 <script>
+import { addListRequest } from 'api/request'
+import { mapState } from 'vuex'
+
 export default {
   name: 'AddList',
   data() {
@@ -56,21 +59,44 @@ export default {
         title: '',
         description: '',
       },
+      addListRules: {
+        title: [
+          { required: true, message: '请填写名称', trigger: 'blur' },
+        ],
+        description: [
+          { required: true, message: '请填写描述', trigger: 'blur' },
+        ],
+      },
     }
+  },
+  computed: {
+    ...mapState(['userid']),
   },
   methods: {
     submitAddListForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (!valid) {
           return false
         }
+        const temp = JSON.parse(JSON.stringify(this.addListForm))
+        temp.userid = this.userid
+        const res = await addListRequest(temp)
+        if (!res.errno) {
+          this.isShowDrawer = false
+          this.$EventBus.$emit('refresh')
+          this.$message({
+            message: '添加列表成功！',
+            type: 'success',
+          })
+          this.addListForm.title = ''
+          this.addListForm.description = ''
+          return true
+        }
         this.isShowDrawer = false
         this.$message({
-          message: '添加列表成功！',
-          type: 'success',
+          message: '添加列表失败！',
+          type: 'error',
         })
-        this.addListForm.title = ''
-        this.addListForm.description = ''
         return true
       })
     },

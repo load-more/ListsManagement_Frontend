@@ -14,3 +14,8 @@ export function registerRequest(params) {
 export function getListRequest(params) {
   return request().post('/lists/getAll', params)
 }
+
+// 添加列表
+export function addListRequest(params) {
+  return request().post('/lists/create', params)
+}

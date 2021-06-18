@@ -209,6 +209,17 @@ export default {
     const rst = await getListRequest(temp);
     this.allData = rst.data;
   },
+  mounted() {
+    this.$EventBus.$on('refresh', async () => {
+      const temp = JSON.parse(
+        JSON.stringify({
+          userid: this.userid,
+        }),
+      );
+      const rst = await getListRequest(temp);
+      this.allData = rst.data;
+    })
+  },
   components: {
     AddItem,
     EditList,
