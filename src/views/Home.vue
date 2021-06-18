@@ -1,24 +1,25 @@
 <template>
-  <div class="container">
-    <div class="header">
-      <span>你好，xxx</span>
-      <span class="quit">退出</span>
+  <div class='container'>
+    <div class='header'>
+      <span>你好，{{ nickname }}</span>
+      <span class='quit' @click='logout'>退出</span>
     </div>
-    <div class="content">
-      <div class="top">
+    <div class='content'>
+      <div class='top'>
         <span>Lists Management System</span>
       </div>
-      <el-collapse v-model="activeNames" style="height:80vh">
-        <el-scrollbar style="height:100%">
+      <el-collapse v-model='activeNames' style='height: 80vh'>
+        <el-scrollbar style='height: 100%'>
           <el-collapse-item
-            v-for="(item, index) in allData.lists"
-            :title="item.title"
-            :key="index"
-            name="index">
-            <div class="buttons">
-              <el-tooltip effect="dark" content="添加子项" placement="top">
+            v-for='(item, index) in allData.lists'
+            :title='item.title'
+            :key='index'
+            name='index'
+          >
+            <div class='buttons'>
+              <el-tooltip effect='dark' content='添加子项' placement='top'>
                 <el-button
-                  icon="el-icon-document-add"
+                  icon='el-icon-document-add'
                   size='mini'
                   @click="showDrawer('showAddItemDrawer')"
                   circle
@@ -26,41 +27,38 @@
               </el-tooltip>
               <el-tooltip effect='dark' content='编辑列表' placement='top'>
                 <el-button
-                  icon="el-icon-edit"
+                  icon='el-icon-edit'
                   size='mini'
                   @click="showDrawer('showEditListDrawer')"
                   circle
                 ></el-button>
               </el-tooltip>
               <el-tooltip effect='dark' content='分享列表' placement='top'>
-                <el-button
-                  icon="el-icon-share"
-                  size='mini'
-                  circle
-                ></el-button>
+                <el-button icon='el-icon-share' size='mini' circle></el-button>
               </el-tooltip>
               <el-tooltip effect='dark' content='删除列表' placement='top'>
                 <el-button
-                  icon="el-icon-delete"
+                  icon='el-icon-delete'
                   size='mini'
-                  @click="deleteList"
+                  @click='deleteList'
                   circle
                 ></el-button>
               </el-tooltip>
             </div>
-            <div class="list-description">
+            <div class='list-description'>
               {{ item.description }}
             </div>
             <el-card
-              class="box-card"
-              v-for="(i,index) in item.items"
-              :key="index">
-              <div slot="header" class="clearfix">
+              class='box-card'
+              v-for='(i, index) in item.items'
+              :key='index'
+            >
+              <div slot='header' class='clearfix'>
                 <span>{{ i.title }}</span>
-                <div class="buttons" style="float: right; padding: 3px 0">
+                <div class='buttons' style='float: right; padding: 3px 0'>
                   <el-tooltip effect='dark' content='编辑子项' placement='top'>
                     <el-button
-                      icon="el-icon-edit"
+                      icon='el-icon-edit'
                       size='mini'
                       @click="showDrawer('showEditItemDrawer')"
                       circle
@@ -68,7 +66,7 @@
                   </el-tooltip>
                   <el-tooltip effect='dark' content='删除子项' placement='top'>
                     <el-button
-                      icon="el-icon-delete"
+                      icon='el-icon-delete'
                       size='mini'
                       @click='removeItem'
                       circle
@@ -76,13 +74,13 @@
                   </el-tooltip>
                 </div>
               </div>
-              <div class="text item">
+              <div class='text item'>
                 <p>{{ i.description }}</p>
               </div>
             </el-card>
           </el-collapse-item>
         </el-scrollbar>
-        <div style="text-align:center;">
+        <div style='text-align: center'>
           <el-tooltip effect='dark' content='添加列表' placement='top'>
             <el-button
               icon='el-icon-plus'
@@ -102,14 +100,18 @@
 </template>
 
 <script>
-import { getListRequest } from 'api/request'
-import AddItem from './drawers/AddItem.vue'
-import EditList from './drawers/EditList.vue'
-import EditItem from './drawers/EditItem.vue'
-import AddList from './drawers/AddList.vue'
+import { getListRequest } from 'api/request';
+import { mapState } from 'vuex';
+import AddItem from './drawers/AddItem.vue';
+import EditList from './drawers/EditList.vue';
+import EditItem from './drawers/EditItem.vue';
+import AddList from './drawers/AddList.vue';
 
 export default {
   name: 'Home',
+  computed: {
+    ...mapState(['userid', 'username', 'nickname']),
+  },
   data() {
     return {
       allData: {},
@@ -133,57 +135,79 @@ export default {
   },
   methods: {
     showDrawer(val) {
-      this.$EventBus.$emit(val)
+      this.$EventBus.$emit(val);
     },
     saveEditListForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {
-          return false
+          return false;
         }
-        this.showListForm.title = this.editListForm.title
-        this.showListForm.description = this.editListForm.description
-        return true
-      })
+        this.showListForm.title = this.editListForm.title;
+        this.showListForm.description = this.editListForm.description;
+        return true;
+      });
     },
     deleteList() {
       this.$confirm('此操作将永久删除该列表, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!',
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!',
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除',
+          });
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除',
-        });
-      });
     },
     removeItem() {
       this.$confirm('此操作将永久删除该子项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!',
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除',
+          });
+        });
+    },
+    logout() {
+      this.$confirm('确定退出登录吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(() => {
+        sessionStorage.removeItem('userid');
+        this.$router.push('/');
         this.$message({
           type: 'success',
-          message: '删除成功!',
+          message: '退出成功!',
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除',
-        });
-      });
+      })
     },
   },
   async created() {
-    const temp = JSON.parse(JSON.stringify({ userid: 1 }))
-    const rst = await getListRequest(temp)
-    this.allData = rst.data
+    const temp = JSON.parse(
+      JSON.stringify({
+        userid: this.userid,
+      }),
+    );
+    const rst = await getListRequest(temp);
+    this.allData = rst.data;
   },
   components: {
     AddItem,
@@ -194,7 +218,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .container {
   position: relative;
   .header {

@@ -43,6 +43,7 @@
 <script>
 import startAnimation from 'assets/js/login'
 import { loginRequest } from 'api/request'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'Login',
@@ -82,6 +83,9 @@ export default {
     };
   },
   methods: {
+    ...mapMutations([
+      'initInfo',
+    ]),
     submitForm(formName) { // 提交表单时触发
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
@@ -89,7 +93,13 @@ export default {
           const temp = JSON.parse(JSON.stringify(this.ruleForm)) // 深拷贝，防止地址共用
           const res = await loginRequest(temp) // 使用封装的api请求
           if (!res.errno) { // 如果状态码为0，表示获取成功
+            this.initInfo({
+              userid: res.data.id,
+              username: res.data.username,
+              nickname: res.data.nickname,
+            })
             this.$msgSuccess('登录成功！')
+            sessionStorage.setItem('userid', res.data.id)
             this.$router.push('/home')
           } else {
             this.$msgError('用户名或密码错误！')
