@@ -6,6 +6,8 @@ import './plugins'
 
 Vue.config.productionTip = false;
 
+Vue.prototype.$EventBus = new Vue()
+
 new Vue({
   router,
   store,

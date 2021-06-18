@@ -90,7 +90,7 @@ export default {
           const res = await loginRequest(temp) // 使用封装的api请求
           if (!res.errno) { // 如果状态码为0，表示获取成功
             this.$msgSuccess('登录成功！')
-            this.$router.push('/layout')
+            this.$router.push('/home')
           } else {
             this.$msgError('用户名或密码错误！')
           }

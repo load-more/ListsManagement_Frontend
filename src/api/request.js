@@ -9,3 +9,8 @@ export function loginRequest(params) {
 export function registerRequest(params) {
   return request().post('/users/register', params)
 }
+
+// 获取所有列表
+export function getListRequest(params) {
+  return request().post('/lists/getAll', params)
+}

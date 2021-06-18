@@ -114,7 +114,7 @@ export default {
             this.$msgSuccess('注册成功！')
             this.$router.push('/login')
           } else {
-            this.$msgError('用户名或密码错误！')
+            this.$msgError('用户名已存在！')
           }
         } else {
           return false;
