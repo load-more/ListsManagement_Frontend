@@ -32,6 +32,19 @@
             show-word-limit
           ></el-input>
         </el-form-item>
+        <el-form-item
+          label='子项类别'
+          prop='category'
+          label-width='80px'>
+          <el-select
+            v-model="editItemForm.category"
+            placeholder="请选择子项类别">
+            <el-option label="生活类" value="0"></el-option>
+            <el-option label="工作类" value="1"></el-option>
+            <el-option label="学习类" value="2"></el-option>
+            <el-option label="其他" value="3"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
     </div>
     <div class="drawer-footer" style="padding-left:30px">
@@ -63,6 +76,7 @@ export default {
         status: 0,
         title: '',
         description: '',
+        category: '',
       },
       editItemRules: {
         title: [
@@ -70,6 +84,9 @@ export default {
         ],
         description: [
           { required: true, message: '子项描述不能为空', trigger: 'blur' },
+        ],
+        category: [
+          { required: true, message: '子项类别不能为空', trigger: 'blur' },
         ],
       },
     }
@@ -109,6 +126,7 @@ export default {
             this.editItemForm.itemid = itemid
             this.editItemForm.title = item.title
             this.editItemForm.description = item.description
+            this.editItemForm.category = item.category
           }
         })
       })

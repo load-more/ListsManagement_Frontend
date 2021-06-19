@@ -32,6 +32,17 @@
           v-model="newItem.description"
         ></el-input>
       </el-form-item>
+      <el-form-item
+        label='子项类别'
+        prop='category'
+        label-width='80px'>
+        <el-select v-model="newItem.category" placeholder="请选择子项类别">
+          <el-option label="生活类" value="0"></el-option>
+          <el-option label="工作类" value="1"></el-option>
+          <el-option label="学习类" value="2"></el-option>
+          <el-option label="其他" value="3"></el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
   </div>
   <div class="drawer-footer" style="padding-left:30px">
@@ -64,10 +75,14 @@ export default {
         description: [
           { required: true, message: '请输入列表描述信息', trigger: 'blur' },
         ],
+        category: [
+          { required: true, message: '请选择子项类别', trigger: 'blur' },
+        ],
       },
       newItem: {
         title: '',
         description: '',
+        category: '',
       },
       listid: null,
     }

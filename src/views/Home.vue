@@ -69,6 +69,7 @@
               class='box-card'
               v-for='(i, index) in item.items'
               :key='index'
+              :style="{backgroundColor:itemColor(i.category,i.status)}"
             >
               <div slot='header' class='clearfix'>
                 <span style="font-weight:bold;font-size:14px">
@@ -292,6 +293,21 @@ export default {
       });
       this.allData = rst.data;
       this.$forceUpdate()
+    },
+    itemColor(category, status) {
+      if (status === '1') {
+        return 'gray'
+      }
+      if (category === '0') {
+        return '#22a2c3'
+      }
+      if (category === '1') {
+        return '#fc6315'
+      }
+      if (category === '2') {
+        return '#fed71a'
+      }
+      return '#69a794'
     },
   },
   async created() {
