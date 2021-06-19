@@ -190,7 +190,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['initLists']),
+    ...mapMutations(['updateLists']),
     showDrawer(val, listid) {
       this.$EventBus.$emit(val, listid);
     },
@@ -298,7 +298,7 @@ export default {
     const rst = await getListRequest({
       userid: this.userid,
     });
-    this.initLists({ allLists: rst.data.lists })
+    this.updateLists({ allLists: rst.data.lists })
     this.allData = rst.data;
   },
   components: {

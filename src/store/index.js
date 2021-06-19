@@ -16,7 +16,7 @@ export default new Vuex.Store({
       state.username = payload.username
       state.nickname = payload.nickname
     },
-    initLists(state, payload) {
+    updateLists(state, payload) {
       state.allLists = payload.allLists
     },
   },

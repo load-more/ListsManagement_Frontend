@@ -47,12 +47,12 @@
 
 <script>
 import { mapState } from 'vuex'
-import { editListRequest } from 'api/request'
+import { editListRequest, getListRequest } from 'api/request'
 
 export default {
   name: 'EditList',
   computed: {
-    ...mapState(['allLists']),
+    ...mapState(['userid']),
   },
   inject: ['reload'],
   data() {
@@ -99,8 +99,11 @@ export default {
     },
   },
   mounted() {
-    this.$EventBus.$on('showEditListDrawer', (listid) => {
-      this.allLists.forEach((item) => {
+    this.$EventBus.$on('showEditListDrawer', async (listid) => {
+      const rst = await getListRequest({
+        userid: this.userid,
+      });
+      rst.data.lists.forEach((item) => {
         if (item.id === listid) {
           this.editListForm.title = item.title
           this.editListForm.description = item.description
