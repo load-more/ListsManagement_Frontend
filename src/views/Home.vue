@@ -29,7 +29,7 @@
                 <el-button
                   icon='el-icon-edit'
                   size='mini'
-                  @click="showDrawer('showEditListDrawer')"
+                  @click="showDrawer('showEditListDrawer',item.id)"
                   circle
                 ></el-button>
               </el-tooltip>
@@ -101,7 +101,7 @@
 
 <script>
 import { getListRequest } from 'api/request';
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import AddItem from './drawers/AddItem.vue';
 import EditList from './drawers/EditList.vue';
 import EditItem from './drawers/EditItem.vue';
@@ -134,6 +134,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(['initLists']),
     showDrawer(val, listid) {
       this.$EventBus.$emit(val, listid);
     },
@@ -207,6 +208,7 @@ export default {
       }),
     );
     const rst = await getListRequest(temp);
+    this.initLists({ allLists: rst.data.lists })
     this.allData = rst.data;
   },
   mounted() {

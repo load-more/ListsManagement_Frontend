@@ -46,14 +46,29 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { editListRequest } from 'api/request'
+
 export default {
   name: 'EditList',
+  computed: {
+    ...mapState(['allLists', 'userid', 'username']),
+  },
   data() {
     return {
       isShowDrawer: false,
       editListForm: {
+        listid: '',
         title: '',
         description: '',
+      },
+      editListRules: {
+        title: [
+          { required: true, message: '列表名称不能为空', trigger: 'blur' },
+        ],
+        description: [
+          { required: true, message: '列表描述不能为空', trigger: 'blur' },
+        ],
       },
     }
   },
@@ -64,16 +79,33 @@ export default {
           return false
         }
         this.isShowDrawer = false
+        const res = editListRequest(this.editListForm)
+        // 修改成功
+        if (!res.errno) {
+          this.$EventBus.$on('refresh')
+          this.$message({
+            message: '修改列表信息成功！',
+            type: 'success',
+          })
+          return true
+        }
         this.$message({
-          message: '修改列表信息成功！',
-          type: 'success',
+          message: '修改列表信息失败！',
+          type: 'error',
         })
         return true
       })
     },
   },
   mounted() {
-    this.$EventBus.$on('showEditListDrawer', () => {
+    this.$EventBus.$on('showEditListDrawer', (listid) => {
+      this.allLists.forEach((item) => {
+        if (item.id === listid) {
+          this.editListForm.title = item.title
+          this.editListForm.description = item.description
+          this.editListForm.listid = listid
+        }
+      })
       this.isShowDrawer = true
     })
   },
