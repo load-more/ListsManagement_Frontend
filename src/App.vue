@@ -5,6 +5,10 @@
 </template>
 
 <style lang="scss">
+#app {
+  overflow: hidden;
+  height: 100vh;
+}
 * {
   margin: 0;
   padding: 0;

@@ -6,46 +6,57 @@
     </div>
     <div class='content'>
       <div class='top'>
-        <span>Lists Management System</span>
+        Lists Management System
       </div>
       <el-collapse style='height: 80vh'>
         <el-scrollbar style='height: 100%'>
           <el-collapse-item
             v-for='(item, index) in allData.lists'
-            :title='item.title'
             :key='index'
           >
-            <div class='buttons'>
-              <el-tooltip effect='dark' content='添加子项' placement='top'>
-                <el-button
-                  icon='el-icon-document-add'
-                  size='mini'
-                  @click="showDrawer('showAddItemDrawer',item.id)"
-                  circle
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip effect='dark' content='编辑列表' placement='top'>
-                <el-button
-                  icon='el-icon-edit'
-                  size='mini'
-                  @click="showDrawer('showEditListDrawer',item.id)"
-                  circle
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip effect='dark' content='分享列表' placement='top'>
-                <el-button icon='el-icon-share' size='mini' circle></el-button>
-              </el-tooltip>
-              <el-tooltip effect='dark' content='删除列表' placement='top'>
-                <el-button
-                  icon='el-icon-delete'
-                  size='mini'
-                  @click='deleteList(item.id)'
-                  circle
-                ></el-button>
-              </el-tooltip>
-            </div>
+            <template slot="title">
+              <span style="font-weight:bold;font-size:18px">
+              {{ item.title }}
+              </span>
+              <div class='buttons' style="margin-left:30px">
+                <el-tooltip effect='dark' content='添加子项' placement='top'>
+                  <el-button
+                    icon='el-icon-document-add'
+                    size='mini'
+                    @click="showDrawer('showAddItemDrawer',item.id)"
+                    circle
+                  ></el-button>
+                </el-tooltip>
+                <el-tooltip effect='dark' content='编辑列表' placement='top'>
+                  <el-button
+                    icon='el-icon-edit'
+                    size='mini'
+                    @click="showDrawer('showEditListDrawer',item.id)"
+                    circle
+                  ></el-button>
+                </el-tooltip>
+                <el-tooltip effect='dark' content='分享列表' placement='top'>
+                  <el-button icon='el-icon-share' size='mini' circle></el-button>
+                </el-tooltip>
+                <el-tooltip effect='dark' content='删除列表' placement='top'>
+                  <el-button
+                    icon='el-icon-delete'
+                    size='mini'
+                    @click='deleteList(item.id)'
+                    circle
+                  ></el-button>
+                </el-tooltip>
+              </div>
+            </template>
             <div class='list-description'>
-              {{ item.description }}
+              <p style="font-size:14px">
+                描述：{{ item.description }}
+              </p>
+              <p style="font-size:12px;color:#666;">
+                创建时间：{{ item.createdAt }}
+                &nbsp;
+                更新时间：{{ item.updatedAt }}
+              </p>
             </div>
             <el-card
               class='box-card'
@@ -53,7 +64,9 @@
               :key='index'
             >
               <div slot='header' class='clearfix'>
-                <span>{{ i.title }}</span>
+                <span style="font-weight:bold;font-size:14px">
+                  To do：{{ i.title }} &nbsp; ({{ i.status | getStatus }})
+                </span>
                 <div class='buttons' style='float: right; padding: 3px 0'>
                   <el-tooltip effect='dark' content='编辑子项' placement='top'>
                     <el-button
@@ -74,7 +87,7 @@
                 </div>
               </div>
               <div class='text item'>
-                <p>{{ i.description }}</p>
+                <p>内容：{{ i.description }}</p>
               </div>
             </el-card>
           </el-collapse-item>
@@ -108,6 +121,17 @@ import AddList from './drawers/AddList.vue';
 
 export default {
   name: 'Home',
+  filters: {
+    getStatus(value) {
+      if (value === '0') {
+        return '待完成'
+      }
+      if (value === '1') {
+        return '已完成'
+      }
+      return '已删除'
+    },
+  },
   computed: {
     ...mapState(['userid', 'username', 'nickname']),
   },
@@ -233,12 +257,14 @@ export default {
 
 <style lang='scss' scoped>
 .container {
-  position: relative;
+  width: 100%;
   .header {
+    height: 5vh;
     display: flex;
+    background-color: #12aa9c;
     justify-content: space-between;
-    font-size: 14px;
     span {
+      color: #fff;
       padding: 5px 15px;
     }
     .quit {
@@ -247,13 +273,25 @@ export default {
     }
   }
   .content {
-    width: 80%;
-    position: absolute;
+    ::v-deep .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
+    .top {
+      text-align: center;
+    }
+    width: 95%;
+    height: 92vh;
+    box-sizing: border-box;
+    padding: 0 20px;
     left: 0;
     right: 0;
-    top: 100px;
+    top: 0;
     bottom: 0;
     margin: auto;
+    border: 2px solid black;
+    .list-description {
+      background-color: rgb(223, 223, 223);
+    }
   }
 }
 </style>
