@@ -44,3 +44,8 @@ export function deleteListRequest(params) {
 export function removeItemRequest(params) {
   return request().post('/items/remove', params)
 }
+
+// 完成子项
+export function finishItemRequest(params) {
+  return request().post('/items/done', params)
+}

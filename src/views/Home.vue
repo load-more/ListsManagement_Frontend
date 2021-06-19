@@ -5,7 +5,7 @@
       <span class='quit' @click='logout'>退出</span>
     </div>
     <div class='content'>
-      <div class='top'>
+      <div class='top' style="font-family:'xindi'">
         Lists Management System
       </div>
       <el-collapse style='height: 80vh'>
@@ -36,7 +36,12 @@
                   ></el-button>
                 </el-tooltip>
                 <el-tooltip effect='dark' content='分享列表' placement='top'>
-                  <el-button icon='el-icon-share' size='mini' circle></el-button>
+                  <el-button
+                    icon='el-icon-share'
+                    size='mini'
+                    @click="shareList(item.id)"
+                    circle
+                  ></el-button>
                 </el-tooltip>
                 <el-tooltip effect='dark' content='删除列表' placement='top'>
                   <el-button
@@ -56,6 +61,8 @@
                 创建时间：{{ item.createdAt }}
                 &nbsp;
                 更新时间：{{ item.updatedAt }}
+                &nbsp;
+                共有 {{ item.items.length }} 个子项
               </p>
             </div>
             <el-card
@@ -76,6 +83,15 @@
                       circle
                     ></el-button>
                   </el-tooltip>
+                  <el-tooltip effect='dark' content='完成子项' placement='top'>
+                    <el-button
+                      icon='el-icon-check'
+                      size='mini'
+                      :disabled="i.status==='1'"
+                      @click="finishItem(i.id)"
+                      circle
+                    ></el-button>
+                  </el-tooltip>
                   <el-tooltip effect='dark' content='删除子项' placement='top'>
                     <el-button
                       icon='el-icon-delete'
@@ -88,10 +104,18 @@
               </div>
               <div class='text item'>
                 <p>内容：{{ i.description }}</p>
+                <p style="font-size:12px;color:#666;background-color:#dfdfdf;">
+                  创建时间：{{ i.createdAt }}
+                  &nbsp;
+                  更新时间：{{ i.updatedAt }}
+                </p>
               </div>
             </el-card>
           </el-collapse-item>
         </el-scrollbar>
+        <div style="font-size:14px;color:#666;">
+          共有 {{ allData.lists.length }} 个列表
+        </div>
         <div style='text-align: center'>
           <el-tooltip effect='dark' content='添加列表' placement='top'>
             <el-button
@@ -112,7 +136,12 @@
 </template>
 
 <script>
-import { getListRequest, deleteListRequest, removeItemRequest } from 'api/request';
+import {
+  getListRequest,
+  deleteListRequest,
+  removeItemRequest,
+  finishItemRequest,
+} from 'api/request';
 import { mapState, mapMutations } from 'vuex';
 import AddItem from './drawers/AddItem.vue';
 import EditList from './drawers/EditList.vue';
@@ -217,6 +246,32 @@ export default {
           });
         });
     },
+    finishItem(itemid) {
+      this.$confirm('确定完成了吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info',
+      })
+        .then(async () => {
+          await finishItemRequest({ itemid })
+          this.reload()
+          this.$message({
+            type: 'success',
+            message: '子项已完成!',
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '操作已取消',
+          });
+        });
+    },
+    shareList() {
+      this.$alert('分享是一种美德~', '鲁迅说过：', {
+        confirmButtonText: '确定',
+      });
+    },
     logout() {
       this.$confirm('确定退出登录吗?', '提示', {
         confirmButtonText: '确定',
@@ -280,7 +335,7 @@ export default {
       text-align: center;
     }
     width: 95%;
-    height: 92vh;
+    height: 94vh;
     box-sizing: border-box;
     padding: 0 20px;
     left: 0;
