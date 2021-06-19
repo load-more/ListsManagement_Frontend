@@ -19,3 +19,8 @@ export function getListRequest(params) {
 export function addListRequest(params) {
   return request().post('/lists/create', params)
 }
+
+// 添加子项
+export function addItemRequest(params) {
+  return request().post('/items/add', params)
+}

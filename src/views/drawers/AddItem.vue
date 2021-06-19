@@ -45,8 +45,14 @@
 </template>
 
 <script>
+import { addItemRequest } from 'api/request'
+import { mapState } from 'vuex'
+
 export default {
   name: 'AddItem',
+  computed: {
+    ...mapState(['userid']),
+  },
   data() {
     return {
       addItemDrawer: false,
@@ -62,6 +68,7 @@ export default {
         title: '',
         description: '',
       },
+      listid: null,
     }
   },
   methods: {
@@ -70,19 +77,35 @@ export default {
         if (!valid) {
           return false
         }
+        const temp = JSON.parse(JSON.stringify(this.newItem))
+        temp.userid = this.userid
+        temp.listid = this.listid
+        const res = addItemRequest(temp)
+        // 如果请求成功
+        if (!res.errno) {
+          this.addItemDrawer = false
+          this.$EventBus.$emit('refresh')
+          this.$message({
+            message: '添加子项成功！',
+            type: 'success',
+          });
+          this.newItem.title = ''
+          this.newItem.description = ''
+          return true
+        }
+        // 如果请求失败
         this.addItemDrawer = false
         this.$message({
-          message: '添加列表成功！',
-          type: 'success',
+          message: '添加子项失败！',
+          type: 'error',
         });
-        this.newItem.title = ''
-        this.newItem.description = ''
         return true
       })
     },
   },
   mounted() {
-    this.$EventBus.$on('showAddItemDrawer', () => {
+    this.$EventBus.$on('showAddItemDrawer', (listid) => {
+      this.listid = listid
       this.addItemDrawer = true
     })
   },

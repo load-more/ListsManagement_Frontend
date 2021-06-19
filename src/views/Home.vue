@@ -21,7 +21,7 @@
                 <el-button
                   icon='el-icon-document-add'
                   size='mini'
-                  @click="showDrawer('showAddItemDrawer')"
+                  @click="showDrawer('showAddItemDrawer',item.id)"
                   circle
                 ></el-button>
               </el-tooltip>
@@ -134,8 +134,8 @@ export default {
     };
   },
   methods: {
-    showDrawer(val) {
-      this.$EventBus.$emit(val);
+    showDrawer(val, listid) {
+      this.$EventBus.$emit(val, listid);
     },
     saveEditListForm(formName) {
       this.$refs[formName].validate((valid) => {

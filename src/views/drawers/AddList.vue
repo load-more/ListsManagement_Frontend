@@ -78,9 +78,12 @@ export default {
         if (!valid) {
           return false
         }
+        // 生成params
         const temp = JSON.parse(JSON.stringify(this.addListForm))
         temp.userid = this.userid
+        // 获取请求结果
         const res = await addListRequest(temp)
+        // 如果请求成功，刷新数据
         if (!res.errno) {
           this.isShowDrawer = false
           this.$EventBus.$emit('refresh')
@@ -92,6 +95,7 @@ export default {
           this.addListForm.description = ''
           return true
         }
+        // 如果请求失败
         this.isShowDrawer = false
         this.$message({
           message: '添加列表失败！',
