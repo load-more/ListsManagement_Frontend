@@ -52,6 +52,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'AddList',
+  inject: ['reload'],
   data() {
     return {
       isShowDrawer: false,
@@ -86,7 +87,7 @@ export default {
         // 如果请求成功，刷新数据
         if (!res.errno) {
           this.isShowDrawer = false
-          this.$EventBus.$emit('refresh')
+          this.reload()
           this.$message({
             message: '添加列表成功！',
             type: 'success',

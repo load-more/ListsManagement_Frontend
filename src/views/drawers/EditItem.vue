@@ -54,6 +54,7 @@ export default {
   computed: {
     ...mapState(['allLists']),
   },
+  inject: ['reload'],
   data() {
     return {
       isShowDrawer: false,
@@ -75,14 +76,14 @@ export default {
   },
   methods: {
     saveEditItemForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (!valid) {
           return false
         }
         this.isShowDrawer = false
-        const res = editItemRequest(this.editItemForm)
+        const res = await editItemRequest(this.editItemForm)
         if (!res.errno) {
-          this.$EventBus.$on('refresh')
+          this.reload()
           this.$message({
             message: '修改子项信息成功！',
             type: 'success',
@@ -99,7 +100,6 @@ export default {
   },
   mounted() {
     this.$EventBus.$on('showEditItemDrawer', (itemid) => {
-      console.log(this.allLists);
       this.allLists.forEach((list) => {
         list.items.forEach((item) => {
           if (item.id === itemid) {

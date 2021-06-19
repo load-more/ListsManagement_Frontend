@@ -8,13 +8,12 @@
       <div class='top'>
         <span>Lists Management System</span>
       </div>
-      <el-collapse v-model='activeNames' style='height: 80vh'>
+      <el-collapse style='height: 80vh'>
         <el-scrollbar style='height: 100%'>
           <el-collapse-item
             v-for='(item, index) in allData.lists'
             :title='item.title'
             :key='index'
-            name='index'
           >
             <div class='buttons'>
               <el-tooltip effect='dark' content='添加子项' placement='top'>
@@ -112,10 +111,14 @@ export default {
   computed: {
     ...mapState(['userid', 'username', 'nickname']),
   },
+  provide() {
+    return {
+      reload: this.reload,
+    }
+  },
   data() {
     return {
       allData: {},
-      activeNames: ['1'],
       addItemDrawer: false,
       editListDrawer: false,
       editItemDrawer: false,
@@ -156,7 +159,7 @@ export default {
       })
         .then(async () => {
           await deleteListRequest({ listid })
-          this.$EventBus.$emit('refresh')
+          this.reload()
           this.$message({
             type: 'success',
             message: '删除成功!',
@@ -177,7 +180,7 @@ export default {
       })
         .then(async () => {
           await removeItemRequest({ itemid })
-          this.$EventBus.$emit('refresh')
+          this.reload()
           this.$message({
             type: 'success',
             message: '删除成功!',
@@ -204,27 +207,20 @@ export default {
         });
       })
     },
+    async reload() {
+      const rst = await getListRequest({
+        userid: this.userid,
+      });
+      this.allData = rst.data;
+      this.$forceUpdate()
+    },
   },
   async created() {
-    const temp = JSON.parse(
-      JSON.stringify({
-        userid: this.userid,
-      }),
-    );
-    const rst = await getListRequest(temp);
+    const rst = await getListRequest({
+      userid: this.userid,
+    });
     this.initLists({ allLists: rst.data.lists })
     this.allData = rst.data;
-  },
-  mounted() {
-    this.$EventBus.$on('refresh', async () => {
-      const temp = JSON.parse(
-        JSON.stringify({
-          userid: this.userid,
-        }),
-      );
-      const rst = await getListRequest(temp);
-      this.allData = rst.data;
-    })
   },
   components: {
     AddItem,

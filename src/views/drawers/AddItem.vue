@@ -50,6 +50,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'AddItem',
+  inject: ['reload'],
   computed: {
     ...mapState(['userid']),
   },
@@ -73,18 +74,18 @@ export default {
   },
   methods: {
     submitAddItemForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (!valid) {
           return false
         }
         const temp = JSON.parse(JSON.stringify(this.newItem))
         temp.userid = this.userid
         temp.listid = this.listid
-        const res = addItemRequest(temp)
+        const res = await addItemRequest(temp)
         // 如果请求成功
         if (!res.errno) {
           this.addItemDrawer = false
-          this.$EventBus.$emit('refresh')
+          this.reload()
           this.$message({
             message: '添加子项成功！',
             type: 'success',

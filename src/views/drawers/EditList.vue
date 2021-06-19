@@ -54,6 +54,7 @@ export default {
   computed: {
     ...mapState(['allLists']),
   },
+  inject: ['reload'],
   data() {
     return {
       isShowDrawer: false,
@@ -74,15 +75,15 @@ export default {
   },
   methods: {
     saveEditListForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (!valid) {
           return false
         }
         this.isShowDrawer = false
-        const res = editListRequest(this.editListForm)
+        const res = await editListRequest(this.editListForm)
         // 修改成功
         if (!res.errno) {
-          this.$EventBus.$on('refresh')
+          this.reload()
           this.$message({
             message: '修改列表信息成功！',
             type: 'success',
