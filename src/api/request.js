@@ -34,3 +34,13 @@ export function editListRequest(params) {
 export function editItemRequest(params) {
   return request().post('/items/edit', params)
 }
+
+// 删除列表
+export function deleteListRequest(params) {
+  return request().post('/lists/delete', params)
+}
+
+// 删除子项
+export function removeItemRequest(params) {
+  return request().post('/items/remove', params)
+}

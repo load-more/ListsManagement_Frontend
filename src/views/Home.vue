@@ -40,7 +40,7 @@
                 <el-button
                   icon='el-icon-delete'
                   size='mini'
-                  @click='deleteList'
+                  @click='deleteList(item.id)'
                   circle
                 ></el-button>
               </el-tooltip>
@@ -68,7 +68,7 @@
                     <el-button
                       icon='el-icon-delete'
                       size='mini'
-                      @click='removeItem'
+                      @click='removeItem(i.id)'
                       circle
                     ></el-button>
                   </el-tooltip>
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { getListRequest } from 'api/request';
+import { getListRequest, deleteListRequest, removeItemRequest } from 'api/request';
 import { mapState, mapMutations } from 'vuex';
 import AddItem from './drawers/AddItem.vue';
 import EditList from './drawers/EditList.vue';
@@ -148,13 +148,15 @@ export default {
         return true;
       });
     },
-    deleteList() {
+    deleteList(listid) {
       this.$confirm('此操作将永久删除该列表, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       })
-        .then(() => {
+        .then(async () => {
+          await deleteListRequest({ listid })
+          this.$EventBus.$emit('refresh')
           this.$message({
             type: 'success',
             message: '删除成功!',
@@ -167,13 +169,15 @@ export default {
           });
         });
     },
-    removeItem() {
+    removeItem(itemid) {
       this.$confirm('此操作将永久删除该子项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       })
-        .then(() => {
+        .then(async () => {
+          await removeItemRequest({ itemid })
+          this.$EventBus.$emit('refresh')
           this.$message({
             type: 'success',
             message: '删除成功!',
