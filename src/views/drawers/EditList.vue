@@ -52,7 +52,7 @@ import { editListRequest } from 'api/request'
 export default {
   name: 'EditList',
   computed: {
-    ...mapState(['allLists', 'userid', 'username']),
+    ...mapState(['allLists']),
   },
   data() {
     return {

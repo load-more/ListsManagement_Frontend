@@ -46,14 +46,30 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { editItemRequest } from 'api/request'
+
 export default {
   name: 'EditItem',
+  computed: {
+    ...mapState(['allLists']),
+  },
   data() {
     return {
       isShowDrawer: false,
       editItemForm: {
+        itemid: null,
+        status: 0,
         title: '',
         description: '',
+      },
+      editItemRules: {
+        title: [
+          { required: true, message: '子项名称不能为空', trigger: 'blur' },
+        ],
+        description: [
+          { required: true, message: '子项描述不能为空', trigger: 'blur' },
+        ],
       },
     }
   },
@@ -64,16 +80,35 @@ export default {
           return false
         }
         this.isShowDrawer = false
+        const res = editItemRequest(this.editItemForm)
+        if (!res.errno) {
+          this.$EventBus.$on('refresh')
+          this.$message({
+            message: '修改子项信息成功！',
+            type: 'success',
+          });
+          return true
+        }
         this.$message({
-          message: '修改子项信息成功！',
-          type: 'success',
+          message: '修改子项信息失败！',
+          type: 'error',
         });
         return true
       })
     },
   },
   mounted() {
-    this.$EventBus.$on('showEditItemDrawer', () => {
+    this.$EventBus.$on('showEditItemDrawer', (itemid) => {
+      console.log(this.allLists);
+      this.allLists.forEach((list) => {
+        list.items.forEach((item) => {
+          if (item.id === itemid) {
+            this.editItemForm.itemid = itemid
+            this.editItemForm.title = item.title
+            this.editItemForm.description = item.description
+          }
+        })
+      })
       this.isShowDrawer = true
     })
   },

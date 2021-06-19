@@ -29,3 +29,8 @@ export function addItemRequest(params) {
 export function editListRequest(params) {
   return request().post('/lists/edit', params)
 }
+
+// 修改子项信息
+export function editItemRequest(params) {
+  return request().post('/items/edit', params)
+}

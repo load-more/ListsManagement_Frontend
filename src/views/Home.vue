@@ -60,7 +60,7 @@
                     <el-button
                       icon='el-icon-edit'
                       size='mini'
-                      @click="showDrawer('showEditItemDrawer')"
+                      @click="showDrawer('showEditItemDrawer',i.id)"
                       circle
                     ></el-button>
                   </el-tooltip>
